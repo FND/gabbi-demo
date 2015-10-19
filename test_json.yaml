@@ -42,6 +42,8 @@ tests:
 
 - name: retrieve newly created blog post
   GET: $HEADERS["Location"]
+  request_headers:
+      Accept: application/json
 
   status: 200
   response_json_paths:

@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask, url_for, jsonify, request, Response
+from flask import Flask, render_template, url_for, jsonify, request, Response
 
 
 app = Flask(__name__)
@@ -18,28 +18,48 @@ def registry():
         "blog": { "href": url_for("blog") },
         "admin": { "href": "/admin" }
     }
-    body = json.dumps({ "resources": resources })
-    return Response(body, mimetype="application/json-home")
+
+    if request.headers.get("Accept") == "application/json-home":
+        body = json.dumps({ "resources": resources })
+        return Response(body, mimetype="application/json-home")
+
+    resources = [(rel, resources[rel]) for rel in sorted(resources)]
+    return render_template("registry.html", title="service registry", resources=resources)
 
 
 @app.route("/blog", methods=["GET", "POST"])
 def blog():
     if request.method == "POST":
-        article = request.get_json()
+        if request.headers.get("Content-Type") == "application/json":
+            status = 201
+            article = request.get_json()
+        else:
+            status = 302
+            article = { name: value for name, value in request.form.items() }
         ARTICLES.append(article)
 
-        res = Response(status=201)
+        res = Response(status=status)
         res.headers["Location"] = url_for("article", article_id=article["title"].lower())
         return res
 
-    return jsonify({ "articles": ARTICLES })
+    if request.headers.get("Accept") == "application/json":
+        return jsonify({ "articles": ARTICLES })
+
+    articles = [{
+        "title": article["title"],
+        "content": article["content"],
+        "uri": url_for("article", article_id=article["title"].lower())
+    } for article in ARTICLES]
+    return render_template("blog.html", title="blog", articles=articles)
 
 
 @app.route("/blog/<article_id>")
 def article(article_id):
     article = next(entry for entry in ARTICLES if entry["title"].lower() == article_id)
-    return jsonify(article)
-
+    if request.headers.get("Accept") == "application/json":
+        return jsonify(article)
+    else:
+        return "<h1>%s</h1> <p>%s</p>" % (article["title"], article["content"])
 
 if __name__ == "__main__":
     app.run(debug=True)

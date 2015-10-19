@@ -1,0 +1,44 @@
+tests:
+- name: wait for server to boot
+  GET: /
+  poll:
+      count: 10
+      delay: 0.1
+
+- name: retrieve front page
+  GET: /
+
+  response_headers:
+      Content-Type: text/html; charset=utf-8
+  response_html:
+      li:first-child a@href: /admin
+      li:last-child a@href: /blog
+
+- name: retrieve blog posts
+  GET: $RESPONSE_HTML["li:last-child a@href"]
+
+  status: 200
+  response_headers:
+      Content-Type: text/html; charset=utf-8
+  response_html:
+      li a@href: /blog/hello%20world
+
+- name: create blog post
+  POST: /blog
+  request_headers:
+      Content-Type: application/x-www-form-urlencoded
+  data: title=Lipsum&content=lorem%20ipsum
+
+  status: 302
+  response_headers:
+      Location: $SCHEME://$NETLOC/blog/lipsum
+
+- name: retrieve newly created blog post
+  GET: $HEADERS["Location"]
+
+  status: 200
+  response_headers:
+      Content-Type: text/html; charset=utf-8
+  response_strings:
+  - Lipsum
+  - lorem ipsum

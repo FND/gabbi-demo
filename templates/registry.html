@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<ul>
+	{% for caption, resource in resources %}
+	<li>
+		<a href="{{ resource.href }}">{{ caption }}</a>
+	</li>
+	{% endfor %}
+</ul>
+{% endblock %}

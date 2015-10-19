@@ -4,8 +4,12 @@
 
 python app.py &
 echo $! > .server.pid
-
 gabbi-run localhost:5000 < test_json.yaml
+kill `cat .server.pid`
+rm .server.pid
 
+python app.py &
+echo $! > .server.pid
+gabbi-run -r gabbi_html localhost:5000 < test_html.yaml
 kill `cat .server.pid`
 rm .server.pid
