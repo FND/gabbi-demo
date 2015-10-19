@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+. venv/bin/activate
+
+python app.py &
+echo $! > .server.pid
+
+gabbi-run localhost:5000 < test_json.yaml
+
+kill `cat .server.pid`
+rm .server.pid

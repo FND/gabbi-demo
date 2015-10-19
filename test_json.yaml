@@ -1,0 +1,49 @@
+tests:
+- name: wait for server to boot
+  GET: /
+  poll:
+      count: 10
+      delay: 0.1
+
+- name: retrieve service registry
+  GET: /
+  request_headers:
+      Accept: application/json-home
+
+  status: 200
+  response_headers:
+      Content-Type: application/json-home
+  response_json_paths:
+      $.resources.blog.href: /blog
+      $.resources.admin.href: /admin
+
+- name: retrieve blog posts
+  GET: $RESPONSE["$.resources.blog.href"]
+  request_headers:
+      Accept: application/json
+
+  status: 200
+  response_headers:
+      Content-Type: application/json
+  response_json_paths:
+      $.articles[0].title: Hello World
+
+- name: create blog post
+  POST: /blog
+  request_headers:
+      Content-Type: application/json
+  data:
+    title: Lipsum
+    content: lorem ipsum dolor sit amet
+
+  status: 201
+  response_headers:
+      Location: $SCHEME://$NETLOC/blog/lipsum
+
+- name: retrieve newly created blog post
+  GET: $HEADERS["Location"]
+
+  status: 200
+  response_json_paths:
+      $.title: Lipsum
+      $.content: lorem ipsum dolor sit amet
