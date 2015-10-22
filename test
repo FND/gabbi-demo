@@ -2,14 +2,20 @@
 
 . venv/bin/activate
 
-python app.py &
-echo $! > .server.pid
-gabbi-run localhost:5000 < test_json.yaml
-kill `cat .server.pid`
-rm .server.pid
+function launch {
+	python app.py &
+	echo $! > .server.pid
+}
 
-python app.py &
-echo $! > .server.pid
+function terminate {
+	kill `cat .server.pid`
+	rm .server.pid
+}
+
+launch
+gabbi-run localhost:5000 < test_json.yaml
+terminate
+
+launch
 gabbi-run -r gabbi_html localhost:5000 < test_html.yaml
-kill `cat .server.pid`
-rm .server.pid
+terminate
