@@ -11,11 +11,11 @@ tests:
   response_headers:
       Content-Type: text/html; charset=utf-8
   response_html:
-      li:first-child a@href: /admin
-      li:last-child a@href: /blog
+      a[rel=blog]@href: /blog
+      a[rel=search]@href: /search
 
 - name: retrieve blog posts
-  GET: $RESPONSE_HTML["li:last-child a@href"]
+  GET: $RESPONSE_HTML["a[rel=blog]@href"]
 
   status: 200
   response_headers:

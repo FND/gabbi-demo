@@ -17,6 +17,7 @@ ARTICLES = [{
 def registry():
     resources = {
         "blog": { "href": url_for("blog") },
+        "search": { "href": "/search" },
         "admin": { "href": "/admin" }
     }
 
