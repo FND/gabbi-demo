@@ -10,14 +10,15 @@
 </ul>
 
 <form action="{{ url_for("blog") }}" method="post">
-	<label>
-		title:
-		<input name="title">
-	</label>
-	<div>
-		<textarea name="content" rows="5"></textarea>
-	</div>
+	<fieldset>
+		<legend>create article</legend>
 
-	<button type="submit">save</button>
+		<input name="title" placeholder="Hello World">
+		<p>
+			<textarea name="content" rows="5" placeholder="lorem ipsum"></textarea>
+		</p>
+
+		<button type="submit">save</button>
+	</fieldset>
 </form>
 {% endblock %}
