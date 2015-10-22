@@ -60,7 +60,8 @@ def article(article_id):
     if request.headers.get("Accept") == "application/json":
         return jsonify(article)
     else:
-        return "<h1>%s</h1> <p>%s</p>" % (article["title"], article["content"])
+        return render_template("article.html", title="article", article=article)
+
 
 if __name__ == "__main__":
     try:

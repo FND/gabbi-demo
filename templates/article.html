@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<h1>{{ article.title }}</h1>
+<p>{{ article.content }}</p>
+
+<hr>
+<a href="{{ url_for("blog") }}">⏎ article index</a>
+{% endblock %}
