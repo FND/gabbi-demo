@@ -3,7 +3,7 @@
 . venv/bin/activate
 
 function launch {
-	python app.py &
+	python app.py 5555 &
 	echo $! > .server.pid
 }
 
@@ -13,9 +13,9 @@ function terminate {
 }
 
 launch
-gabbi-run localhost:5000 < test_json.yaml
+gabbi-run localhost:5555 < test_json.yaml
 terminate
 
 launch
-gabbi-run -r gabbi_html localhost:5000 < test_html.yaml
+gabbi-run -r gabbi_html localhost:5555 < test_html.yaml
 terminate

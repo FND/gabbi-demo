@@ -1,4 +1,5 @@
 import json
+import sys
 
 from flask import Flask, render_template, url_for, jsonify, request, Response
 
@@ -62,4 +63,8 @@ def article(article_id):
         return "<h1>%s</h1> <p>%s</p>" % (article["title"], article["content"])
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    try:
+        port = int(sys.argv[1])
+        app.run(port=port)
+    except IndexError: # assume dev mode
+        app.run(debug=True)
