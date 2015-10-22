@@ -21,7 +21,7 @@ def registry():
         "admin": { "href": "/admin" }
     }
 
-    if request.headers.get("Accept") == "application/json-home":
+    if request.headers.get("Accept") in ["application/json-home", "application/json"]:
         body = json.dumps({ "resources": resources })
         return Response(body, mimetype="application/json-home")
 
