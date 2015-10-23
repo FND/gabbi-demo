@@ -33,8 +33,8 @@ tests:
   request_headers:
       Content-Type: application/json
   data:
-    title: Lipsum
-    content: lorem ipsum dolor sit amet
+      title: Lipsum
+      content: lorem ipsum dolor sit amet
 
   status: 201
   response_headers:
